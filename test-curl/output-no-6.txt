@@ -1,0 +1,119 @@
+A. Cek koneksi ke server
+# curl 167.205.35.19:8098/ping
+OK
+# curl 167.205.35.20:8098/ping
+OK
+# curl 167.205.35.21:8098/ping
+OK
+# curl 167.205.35.22:8098/ping
+OK
+
+B. Penyimpanan data key-value
+# curl -v -X PUT http://167.205.35.19:8098/riak/wijayaerick/mykey \
+    -H "Content-type: text/html" \
+    -d "<html><body><h1>My Data for key: mykey</h1></body></html>"
+*   Trying 167.205.35.19...
+* TCP_NODELAY set
+* Connected to 167.205.35.19 (167.205.35.19) port 8098 (#0)
+> POST /riak/wijayaerick/mykey HTTP/1.1
+> Host: 167.205.35.19:8098
+> User-Agent: curl/7.58.0
+> Accept: */*
+> Content-type: text/html
+> Content-Length: 57
+> 
+* upload completely sent off: 57 out of 57 bytes
+< HTTP/1.1 204 No Content
+< Vary: Accept-Encoding
+< Server: MochiWeb/1.1 WebMachine/1.10.9 (cafe not found)
+< Date: Wed, 10 Oct 2018 06:44:34 GMT
+< Content-Type: text/html
+< Content-Length: 0
+< 
+* Connection #0 to host 167.205.35.19 left intact
+
+# curl -v -X PUT http://167.205.35.19:8098/riak/wijayaerick/key2 \
+    -H "Content-type: text/html" \
+    -d "<html><body><h1>My Data for key: key2</h1></body></html>"
+*   Trying 167.205.35.19...
+* TCP_NODELAY set
+* Connected to 167.205.35.19 (167.205.35.19) port 8098 (#0)
+> PUT /riak/wijayaerick/key2 HTTP/1.1
+> Host: 167.205.35.19:8098
+> User-Agent: curl/7.58.0
+> Accept: */*
+> Content-type: text/html
+> Content-Length: 56
+> 
+* upload completely sent off: 56 out of 56 bytes
+< HTTP/1.1 204 No Content
+< Vary: Accept-Encoding
+< Server: MochiWeb/1.1 WebMachine/1.10.9 (cafe not found)
+< Date: Wed, 10 Oct 2018 08:10:04 GMT
+< Content-Type: text/html
+< Content-Length: 0
+< 
+* Connection #0 to host 167.205.35.19 left intact
+
+C. Akses data (browser)
+# http://167.205.35.19:8098/riak/wijayaerick/mykey
+<html><body><h1>My Data for key: mykey</h1></body></html>
+
+# http://167.205.35.19:8098/riak/wijayaerick/key2
+<html><body><h1>My Data for key: key2</h1></body></html>
+
+D. Format akses data
+
+E. PUT
+# curl -v -X PUT http://167.205.35.19:8098/riak/animals/ace \
+    -H "Content-Type: application/json" \
+    -d '{"nickname" : "The Wonder Dog", "breed" : "German Shepherd"}'
+*   Trying 167.205.35.19...
+* TCP_NODELAY set
+* Connected to 167.205.35.19 (167.205.35.19) port 8098 (#0)
+> PUT /riak/animals/ace HTTP/1.1
+> Host: 167.205.35.19:8098
+> User-Agent: curl/7.58.0
+> Accept: */*
+> Content-Type: application/json
+> Content-Length: 60
+> 
+* upload completely sent off: 60 out of 60 bytes
+< HTTP/1.1 204 No Content
+< Vary: Accept-Encoding
+< Server: MochiWeb/1.1 WebMachine/1.10.9 (cafe not found)
+< Date: Wed, 10 Oct 2018 06:48:07 GMT
+< Content-Type: application/json
+< Content-Length: 0
+< 
+* Connection #0 to host 167.205.35.19 left intact
+
+F. GET
+# curl -X GET http://167.205.35.19:8098/riak?buckets=true
+{"buckets":["girvandi","bucketA","wijayaerick","test","testleo","Orders","majors","students","OrderSummaries","kristiantokarim","gua","animals","sashi","malik","test2","adonankue","jonathanchristopher","Customers","kharis","w_equals_0","michael","ade_surya","asdf","tifani","azzahid","pendisaurus","books"]}
+
+G. DELETE
+# curl -v -X DELETE http://167.205.35.19:8098/riak/wijayaerick/mykey
+*   Trying 167.205.35.19...
+* TCP_NODELAY set
+* Connected to 167.205.35.19 (167.205.35.19) port 8098 (#0)
+> DELETE /riak/wijayaerick/mykey HTTP/1.1
+> Host: 167.205.35.19:8098
+> User-Agent: curl/7.58.0
+> Accept: */*
+> 
+< HTTP/1.1 204 No Content
+< Vary: Accept-Encoding
+< Server: MochiWeb/1.1 WebMachine/1.10.9 (cafe not found)
+< Date: Wed, 10 Oct 2018 08:18:39 GMT
+< Content-Type: text/html
+< Content-Length: 0
+< 
+* Connection #0 to host 167.205.35.19 left intact
+
+H. GET
+# curl http://167.205.35.19:8098/riak/wijayaerick?keys=true
+{"props":{"name":"wijayaerick","allow_mult":false,"basic_quorum":false,"big_vclock":50,"chash_keyfun":{"mod":"riak_core_util","fun":"chash_std_keyfun"},"dvv_enabled":false,"dw":"quorum","last_write_wins":false,"linkfun":{"mod":"riak_kv_wm_link_walker","fun":"mapreduce_linkfun"},"n_val":3,"notfound_ok":true,"old_vclock":86400,"postcommit":[],"pr":0,"precommit":[],"pw":0,"r":"quorum","rw":"quorum","small_vclock":50,"w":"quorum","write_once":false,"young_vclock":20},"keys":["mykey","key2"]}
+
+# After delete
+{"props":{"name":"wijayaerick","allow_mult":false,"basic_quorum":false,"big_vclock":50,"chash_keyfun":{"mod":"riak_core_util","fun":"chash_std_keyfun"},"dvv_enabled":false,"dw":"quorum","last_write_wins":false,"linkfun":{"mod":"riak_kv_wm_link_walker","fun":"mapreduce_linkfun"},"n_val":3,"notfound_ok":true,"old_vclock":86400,"postcommit":[],"pr":0,"precommit":[],"pw":0,"r":"quorum","rw":"quorum","small_vclock":50,"w":"quorum","write_once":false,"young_vclock":20},"keys":["key2"]}
