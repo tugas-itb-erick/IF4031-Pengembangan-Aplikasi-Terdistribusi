@@ -1,0 +1,11 @@
+Basic object created
+Location object created for quote object
+StoreValue operation created
+Client object successfully created
+Object storage operation successfully completed
+Success! The object we created and the object we fetched have the same value
+Quote object successfully deleted
+Book object created
+Moby Dick information now stored in Riak
+Book object successfully fetched
+Success! All of our tests check out

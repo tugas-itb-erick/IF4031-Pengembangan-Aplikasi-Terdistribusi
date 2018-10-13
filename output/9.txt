@@ -1,0 +1,26 @@
+a. Bagaimanakah sebuah data disimpan pada node? Jelaskan pada kasus mesin di atas, 
+   dimana terdapat sebuah cluster yang terdiri dari 4 node.
+   
+
+b. Apakah yang dimaksud dengan ring size?
+   
+
+c. Apakah yang dimaksud dengan vnode?
+   
+
+d. Bagaimana algoritma quorum diterapkan pada Riak? Jelaskan menggunakan parameter N, R dan W?
+   
+
+e. Buatlah sebuah program pada Java yang menyimpan data pada Riak dengan menggunakan parameter W 
+   bernilai 0. Apakah data yang ditulis pada program ini akan tersimpan dengan baik pada database?
+   
+
+f. Berapakah setting N, R dan W yang baik untuk program yang banyak melakukan:
+   i.  pembacaan
+       
+   ii. penulisan
+       
+
+g. Mungkinkan jika kita melakukan setting N = W, dan jika terjadi kegagalan node, data
+   dapat hilang? Mengapa?
+   
