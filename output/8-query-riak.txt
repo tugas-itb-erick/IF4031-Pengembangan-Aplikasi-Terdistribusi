@@ -1,0 +1,11 @@
+Creating Data
+Starting Client
+Creating Buckets
+Storing Data
+Fetching related data by shared key
+Customer     1: {"CustomerId":1,"Name":"John Smith","Address":"123 Main Street","City":"Columbus","State":"Ohio","Zip":"43210","Phone":"+1-614-555-5555","CreatedDate":"2013-10-01 14:30:26"}
+OrderSummary 1: {"CustomerId":1,"Summaries":[{"OrderId":1,"Total":415.98,"OrderDate":"2013-10-01 14:42:26"},{"OrderId":2,"Total":359.99,"OrderDate":"2013-10-15 16:43:16"},{"OrderId":3,"Total":74.98,"OrderDate":"2013-11-03 17:45:28"}]}
+Adding Index Data
+Index Queries
+Jane's Orders: 3, 1
+October's Orders: 1, 2
