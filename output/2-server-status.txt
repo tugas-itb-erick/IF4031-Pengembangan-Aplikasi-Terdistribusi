@@ -1,0 +1,50 @@
+Datacenter: datacenter1
+=======================
+Status=Up/Down
+|/ State=Normal/Leaving/Joining/Moving
+--  Address        Load       Tokens       Owns    Host ID                               Rack
+UN  167.205.35.21  4.77 MiB   256          ?       4ec1ca1d-9b8a-4936-996f-aae9f8228397  rack1
+UN  167.205.35.22  5.11 MiB   256          ?       d05af7e6-3fac-4a19-9da1-11464081676b  rack1
+UN  167.205.35.19  4.44 MiB   256          ?       4b1288f8-c3c2-4633-a48d-e1ad44203592  rack1
+
+Note: Non-system keyspaces don't have the same replication settings, effective ownership information is meaningless
+
+
+
+Datacenter: datacenter1
+=======================
+Status=Up/Down
+|/ State=Normal/Leaving/Joining/Moving
+--  Address        Load       Tokens       Owns    Host ID                               Rack
+UN  167.205.35.21  4.77 MiB   256          ?       4ec1ca1d-9b8a-4936-996f-aae9f8228397  rack1
+UN  167.205.35.22  5.11 MiB   256          ?       d05af7e6-3fac-4a19-9da1-11464081676b  rack1
+
+Note: Non-system keyspaces don't have the same replication settings, effective ownership information is meaningless
+
+
+
+
+Datacenter: datacenter1
+=======================
+Status=Up/Down
+|/ State=Normal/Leaving/Joining/Moving
+--  Address        Load       Tokens       Owns    Host ID                               Rack
+UN  167.205.35.21  4.77 MiB   256          ?       4ec1ca1d-9b8a-4936-996f-aae9f8228397  rack1
+UN  167.205.35.22  5.11 MiB   256          ?       d05af7e6-3fac-4a19-9da1-11464081676b  rack1
+UN  167.205.35.19  5.63 MiB   256          ?       4b1288f8-c3c2-4633-a48d-e1ad44203592  rack1
+
+Note: Non-system keyspaces don't have the same replication settings, effective ownership information is meaningless
+
+
+
+Datacenter: datacenter1
+=======================
+Status=Up/Down
+|/ State=Normal/Leaving/Joining/Moving
+--  Address        Load       Tokens       Owns    Host ID                               Rack
+UN  167.205.35.21  4.77 MiB   256          ?       4ec1ca1d-9b8a-4936-996f-aae9f8228397  rack1
+UN  167.205.35.22  5.11 MiB   256          ?       d05af7e6-3fac-4a19-9da1-11464081676b  rack1
+UN  167.205.35.19  5.63 MiB   256          ?       4b1288f8-c3c2-4633-a48d-e1ad44203592  rack1
+
+Note: Non-system keyspaces don't have the same replication settings, effective ownership information is meaningless
+
