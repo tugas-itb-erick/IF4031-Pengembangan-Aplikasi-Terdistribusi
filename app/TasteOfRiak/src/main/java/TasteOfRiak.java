@@ -2,8 +2,6 @@
     Source: https://raw.githubusercontent.com/basho/basho_docs/master/extras/code-examples/TasteOfRiak.java
  */
 
-package explore.riak;
-
 import com.basho.riak.client.api.RiakClient;
 import com.basho.riak.client.api.commands.kv.DeleteValue;
 import com.basho.riak.client.api.commands.kv.FetchValue;
