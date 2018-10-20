@@ -3,20 +3,57 @@ INSERT INTO users (username, password) VALUES ('wijayaerick', '123456');
 INSERT INTO users (username, password) VALUES ('micin', '123456');
 INSERT INTO users (username, password) VALUES ('msg', '123456');
 
+ username    | password
+-------------+----------
+ wijayaerick |   123456
+         msg |   123456
+       micin |   123456
+
 # follow a friend: insert row ke tabel friends dan followers
 INSERT INTO friends (username, friend, since) VALUES ('wijayaerick', 'micin', '2018-10-20 16:20');
 INSERT INTO friends (username, friend, since) VALUES ('micin', 'wijayaerick', '2018-10-20 16:20');
 INSERT INTO followers (username, follower, since) VALUES ('wijayaerick', 'micin', '2018-10-20 16:20');
 INSERT INTO followers (username, follower, since) VALUES ('micin', 'wijayaerick', '2018-10-20 16:20');
 
+ username    | friend      | since
+-------------+-------------+---------------------------------
+ wijayaerick |       micin | 2018-10-20 16:20:00.000000+0000
+       micin | wijayaerick | 2018-10-20 16:20:00.000000+0000
+
+ username    | follower    | since
+-------------+-------------+---------------------------------
+ wijayaerick |       micin | 2018-10-20 16:20:00.000000+0000
+       micin | wijayaerick | 2018-10-20 16:20:00.000000+0000
+
 # tweet: insert row ke tabel tweet, userline, timeline dan timeline semua follower
-INSERT INTO tweets (tweet_id, username, body) VALUES ('00000000-0000-0000-0000-000000000001', 'wijayaerick', 'my first tweet')
-INSERT INTO userline (username, time, tweet_id) VALUES ('wijayaerick', '2018-10-20 16:30:01+0000', '00000000-0000-0000-0000-000000000001')
-INSERT INTO timeline (username, time, tweet_id) VALUES ('wijayaerick', '2018-10-20 16:30:01+0000', '00000000-0000-0000-0000-000000000001')
-INSERT INTO timeline (username, time, tweet_id) VALUES ('micin', '2018-10-20 16:30:01+0000', '00000000-0000-0000-0000-000000000001')
+INSERT INTO tweets (tweet_id, username, body) VALUES (00000000-0000-0000-0000-000000000001, 'wijayaerick', 'my first tweet');
+INSERT INTO userline (username, time, tweet_id) VALUES ('wijayaerick', d2177dd0-eaa2-11de-a572-001b779c76e3, 00000000-0000-0000-0000-000000000001);
+INSERT INTO timeline (username, time, tweet_id) VALUES ('wijayaerick', d2177dd0-eaa2-11de-a572-001b779c76e3, 00000000-0000-0000-0000-000000000001);
+INSERT INTO timeline (username, time, tweet_id) VALUES ('micin', d2177dd0-eaa2-11de-a572-001b779c76e3, 00000000-0000-0000-0000-000000000001);
+
+ tweet_id                             | body           | username
+--------------------------------------+----------------+-------------
+ 00000000-0000-0000-0000-000000000001 | my first tweet | wijayaerick
+
+ username    | time                                 | tweet_id
+-------------+--------------------------------------+--------------------------------------
+ wijayaerick | d2177dd0-eaa2-11de-a572-001b779c76e3 | 00000000-0000-0000-0000-000000000001
+
+ username    | time                                 | tweet_id
+-------------+--------------------------------------+--------------------------------------
+ wijayaerick | d2177dd0-eaa2-11de-a572-001b779c76e3 | 00000000-0000-0000-0000-000000000001
+       micin | d2177dd0-eaa2-11de-a572-001b779c76e3 | 00000000-0000-0000-0000-000000000001
 
 # menampilkan tweet per user
 SELECT * FROM tweets WHERE username='wijayaerick';
 
+ tweet_id                             | body           | username
+--------------------------------------+----------------+-------------
+ 00000000-0000-0000-0000-000000000001 | my first tweet | wijayaerick
+
 # menampilkan timeline per user
 SELECT * FROM timeline WHERE username='micin';
+
+ username | time                                 | tweet_id
+----------+--------------------------------------+--------------------------------------
+    micin | d2177dd0-eaa2-11de-a572-001b779c76e3 | 00000000-0000-0000-0000-000000000001

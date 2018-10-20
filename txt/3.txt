@@ -1,0 +1,74 @@
+>> cqlsh 167.205.35.19
+Connected to Sister Cluster at 167.205.35.19:9042.
+[cqlsh 5.0.1 | Cassandra 3.11.3 | CQL spec 3.4.4 | Native protocol v4]
+Use HELP for help.
+
+CREATE KEYSPACE wijayaerick WITH REPLICATION = {'class': 'SimpleStrategy', 'replication_factor': 1};
+
+USE wijayaerick;
+
+CREATE TABLE users (
+    user_id int PRIMARY KEY,
+    fname text,
+    lname text
+);
+
+DESCRIBE users;
+CREATE TABLE wijayaerick.users (
+    user_id int PRIMARY KEY,
+    fname text,
+    lname text
+) WITH bloom_filter_fp_chance = 0.01
+    AND caching = {'keys': 'ALL', 'rows_per_partition': 'NONE'}
+    AND comment = ''
+    AND compaction = {'class': 'org.apache.cassandra.db.compaction.SizeTieredCompactionStrategy', 'max_threshold': '32', 'min_threshold': '4'}
+    AND compression = {'chunk_length_in_kb': '64', 'class': 'org.apache.cassandra.io.compress.LZ4Compressor'}
+    AND crc_check_chance = 1.0
+    AND dclocal_read_repair_chance = 0.1
+    AND default_time_to_live = 0
+    AND gc_grace_seconds = 864000
+    AND max_index_interval = 2048
+    AND memtable_flush_period_in_ms = 0
+    AND min_index_interval = 128
+    AND read_repair_chance = 0.0
+    AND speculative_retry = '99PERCENTILE';
+
+INSERT INTO users (user_id, fname, lname) VALUES (1745, 'john', 'smith');
+INSERT INTO users (user_id, fname, lname) VALUES (1744, 'john', 'doe');
+INSERT INTO users (user_id, fname, lname) VALUES (1746, 'john', 'smith');
+
+SELECT * FROM users;
+ user_id | fname | lname
+---------+-------+-------
+    1745 |  john | smith
+    1744 |  john |   doe
+    1746 |  john | smith
+
+CREATE INDEX ON users (lname);
+
+DESCRIBE users;
+CREATE TABLE wijayaerick.users (
+    user_id int PRIMARY KEY,
+    fname text,
+    lname text
+) WITH bloom_filter_fp_chance = 0.01
+    AND caching = {'keys': 'ALL', 'rows_per_partition': 'NONE'}
+    AND comment = ''
+    AND compaction = {'class': 'org.apache.cassandra.db.compaction.SizeTieredCompactionStrategy', 'max_threshold': '32', 'min_threshold': '4'}
+    AND compression = {'chunk_length_in_kb': '64', 'class': 'org.apache.cassandra.io.compress.LZ4Compressor'}
+    AND crc_check_chance = 1.0
+    AND dclocal_read_repair_chance = 0.1
+    AND default_time_to_live = 0
+    AND gc_grace_seconds = 864000
+    AND max_index_interval = 2048
+    AND memtable_flush_period_in_ms = 0
+    AND min_index_interval = 128
+    AND read_repair_chance = 0.0
+    AND speculative_retry = '99PERCENTILE';
+CREATE INDEX users_lname_idx ON wijayaerick.users (lname);
+
+SELECT * FROM users WHERE lname = 'smith';
+ user_id | fname | lname
+---------+-------+-------
+    1745 |  john | smith
+    1746 |  john | smith
