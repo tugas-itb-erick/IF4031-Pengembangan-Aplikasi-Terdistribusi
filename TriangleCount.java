@@ -33,7 +33,7 @@ import org.apache.hadoop.util.GenericOptionsParser;
 
 public class TriangleCount {
 
-	public static class Mapper1 extends Mapper<Object, Text, Text, IntWritable> {
+	public static class PreprocessingMapper extends Mapper<Object, Text, Text, IntWritable> {
 		
 		private final static IntWritable one = new IntWritable(1);
 
@@ -52,7 +52,7 @@ public class TriangleCount {
 		}
 	}
 
-	public static class Reducer1 extends Reducer<Text, IntWritable, Text, Text> {
+	public static class PreprocessingReducer extends Reducer<Text, IntWritable, Text, Text> {
 		
 		private Text valOut = new Text("#");
 
@@ -61,7 +61,7 @@ public class TriangleCount {
 		}
 	}
 
-	public static class Mapper2 extends Mapper<Object, Text, IntWritable, IntWritable> {
+	public static class Mapper1 extends Mapper<Object, Text, IntWritable, IntWritable> {
 		
 		private IntWritable keyOut = new IntWritable();
 		
@@ -77,7 +77,7 @@ public class TriangleCount {
 		}
 	}
 
-	public static class Reducer2 extends Reducer<IntWritable, IntWritable, Text, Text> {
+	public static class Reducer1 extends Reducer<IntWritable, IntWritable, Text, Text> {
 		
 		private Text keyOut = new Text();
 		
@@ -107,16 +107,32 @@ public class TriangleCount {
 			System.exit(2);
 		}
 
-		Job job = Job.getInstance(conf, "word count");
-		job.setJarByClass(TriangleCount.class);
-		job.setMapperClass(PreprocessMapper.class);
-		//job.setCombinerClass(IntSumReducer.class);
-		//job.setReducerClass(IntSumReducer.class);
-		job.setOutputKeyClass(Text.class);
-		job.setOutputValueClass(IntWritable.class);
+		Job jobPreprocess = jobPreprocess.getInstance(conf, "Preprocess");
+		jobPreprocess.setJarByClass(TriangleCount.class);
+		jobPreprocess.setMapperClass(PreprocessMap.class);
+		jobPreprocess.setReducerClass(PreprocessReducer.class);
+		jobPreprocess.setMapOutputKeyClass(Text.class);
+		jobPreprocess.setMapOutputValueClass(IntWritable.class);
+		jobPreprocess.setOutputKeyClass(Text.class);
+		jobPreprocess.setOutputValueClass(Text.class);
+		for (int i = 0; i < otherArgs.length - 1; i++) {
+		  	FileInputFormat.addInputPath(jobPreprocess, new Path(otherArgs[i]));
+		}
+		FileOutputFormat.setOutputPath(jobPreprocess, new Path(otherArgs[otherArgs.length - 1], "out1"));
+		if (!jobPreprocess.waitForCompletion(true)) {
+		  	System.exit(1);
+		}
 
-		for(int i = 0; i < otherArgs.length - 1; ++i) FileInputFormat.addInputPath(job, new Path(otherArgs[i]));
-		FileOutputFormat.setOutputPath(job, new Path(otherArgs[otherArgs.length - 1]));
-		System.exit(job.waitForCompletion(true)? 0 : 1);
+		Job job1 = Job.getInstance(conf, "MapReduce 1");
+		job1.setJarByClass(TriangleCount.class);
+		job1.setMapperClass(Map1.class);
+		job1.setReducerClass(Reducer1.class);
+		job1.setMapOutputKeyClass(IntWritable.class);
+		job1.setMapOutputValueClass(IntWritable.class);
+		job1.setOutputKeyClass(Text.class);
+		job1.setOutputValueClass(Text.class);
+		FileInputFormat.addInputPath(job1, new Path(otherArgs[otherArgs.length - 1], "out1"));
+		FileOutputFormat.setOutputPath(job1, new Path(otherArgs[otherArgs.length - 1], "out2"));
+		System.exit(job1.waitForCompletion(true) ? 0 : 1);
 	}
 }
