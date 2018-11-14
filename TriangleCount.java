@@ -19,71 +19,84 @@ import org.apache.hadoop.util.GenericOptionsParser;
 
 public class TriangleCount {
 
-	public static class PreprocessMapper extends Mapper<Object, Text, Text, IntWritable> {
-		
-		private final static IntWritable one = new IntWritable(1);
-
-		private Text word = new Text();
-
-		public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
-			StringTokenizer itr = new StringTokenizer(key.toString());
-			String U = itr.nextToken();
-			String V = itr.nextToken();
-			if (Integer.parseInt(U) > Integer.parseInt(V)) {
-				word.set(U + ";" + V);
-			} else {
-				word.set(V + ";" + U);
-			}
-			context.write(word, one);
-		}
-	}
-
-	public static class PreprocessReducer extends Reducer<Text, IntWritable, Text, Text> {
-		
-		private Text valOut = new Text("#");
-
-		public void reduce(Text key, Iterable<IntWritable> values, Context context) throws IOException, InterruptedException {
-			context.write(key, valOut);
-		}
-	}
-
 	public static class Mapper1 extends Mapper<Object, Text, IntWritable, IntWritable> {
 		
 		private IntWritable keyOut = new IntWritable();
-		
+
 		private IntWritable valOut = new IntWritable();
 
 		public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
-			StringTokenizer itr = new StringTokenizer(value.toString());
-			String token = itr.nextToken();
-			String[] nums = token.split(";");
-			keyOut.set(Integer.parseInt(nums[0]));
-			valOut.set(Integer.parseInt(nums[1]));
+			StringTokenizer itr = new StringTokenizer(key.toString());
+			int u = Integer.parseInt(itr.nextToken());
+			int v = Integer.parseInt(itr.nextToken());
+			if (v > u) {
+				keyOut.set(u);
+				valOut.set(v);
+			} else {
+				keyOut.set(v);
+				valOut.set(u);
+			}
 			context.write(keyOut, valOut);
 		}
 	}
 
-	public static class Reducer1 extends Reducer<IntWritable, IntWritable, Text, Text> {
-		
-		private Text keyOut = new Text();
+	public static class Reducer1 extends Reducer<IntWritable, IntWritable, IntWritable, Text> {
 		
 		private Text valOut = new Text();
 
-		public void reduce(IntWritable key, Iterable<IntWritable> values, Context context) 
-		throws IOException, InterruptedException {
-			ArrayList<Integer> listValues = new ArrayList<Integer>();
-			values.forEach(val -> listValues.add(new Integer(val.get())));
-			for (Integer val1: listValues) {
-				for (Integer val2: listValues) {
-					if (val1 < val2) {
-						keyOut.set(Integer.toString(key.get()));
-						valOut.set(val1.toString() + ";" + val2.toString());
-						context.write(keyOut, valOut);
+		public void reduce(IntWritable key, Iterable<IntWritable> values, Context context) throws IOException, InterruptedException {
+			values.forEach(val1 -> {
+				values.forEach(val2 -> {
+					if (val1.get() < val2.get()) {
+						valOut.set(val1.toString() + "," + val2.toString());
+						try {
+							context.write(key, valOut);
+						} catch (IOException | InterruptedException e) {
+							e.printStackTrace();
+						}
 					}
-				}
-			}
+				});
+			});
 		}
 	}
+
+	// public static class Mapper1 extends Mapper<Object, Text, IntWritable, IntWritable> {
+		
+	// 	private IntWritable keyOut = new IntWritable();
+		
+	// 	private IntWritable valOut = new IntWritable();
+
+	// 	public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
+	// 		StringTokenizer itr = new StringTokenizer(value.toString());
+	// 		String token = itr.nextToken();
+	// 		String[] nums = token.split(";");
+	// 		keyOut.set(Integer.parseInt(nums[0]));
+	// 		valOut.set(Integer.parseInt(nums[1]));
+	// 		context.write(keyOut, valOut);
+	// 	}
+	// }
+
+	// public static class Reducer1 extends Reducer<IntWritable, IntWritable, Text, Text> {
+		
+	// 	private Text keyOut = new Text();
+		
+	// 	private Text valOut = new Text();
+
+	// 	public void reduce(IntWritable key, Iterable<IntWritable> values, Context context) 
+	// 	throws IOException, InterruptedException {
+	// 		ArrayList<Integer> listValues = new ArrayList<Integer>();
+	// 		values.forEach(val -> listValues.add(new Integer(val.get())));
+	// 		for (Integer val1: listValues) {
+	// 			for (Integer val2: listValues) {
+	// 				if (val1 < val2) {
+	// 					keyOut.set(Integer.toString(key.get()));
+	// 					valOut.set(val1.toString() + ";" + val2.toString());
+	// 					context.write(keyOut, valOut);
+	// 				}
+	// 			}
+	// 		}
+	// 	}
+	// }
 
 	public static void main(String[] args) throws Exception {
 		Configuration conf = new Configuration();
@@ -94,32 +107,32 @@ public class TriangleCount {
 			System.exit(2);
 		}
 
-		Job jobPreprocess = Job.getInstance(conf, "Preprocess");
-		jobPreprocess.setJarByClass(TriangleCount.class);
-		jobPreprocess.setMapperClass(PreprocessMapper.class);
-		jobPreprocess.setReducerClass(PreprocessReducer.class);
-		jobPreprocess.setMapOutputKeyClass(Text.class);
-		jobPreprocess.setMapOutputValueClass(IntWritable.class);
-		jobPreprocess.setOutputKeyClass(Text.class);
-		jobPreprocess.setOutputValueClass(Text.class);
-		for (int i = 0; i < otherArgs.length - 1; i++) {
-		  	FileInputFormat.addInputPath(jobPreprocess, new Path(otherArgs[i]));
-		}
-		FileOutputFormat.setOutputPath(jobPreprocess, new Path(otherArgs[otherArgs.length - 1], "out1"));
-		if (!jobPreprocess.waitForCompletion(true)) {
-		  	System.exit(1);
-		}
-
-		Job job1 = Job.getInstance(conf, "MapReduce 1");
+		Job job1 = Job.getInstance(conf, "Preprocess");
 		job1.setJarByClass(TriangleCount.class);
 		job1.setMapperClass(Mapper1.class);
 		job1.setReducerClass(Reducer1.class);
 		job1.setMapOutputKeyClass(IntWritable.class);
 		job1.setMapOutputValueClass(IntWritable.class);
-		job1.setOutputKeyClass(Text.class);
+		job1.setOutputKeyClass(IntWritable.class);
 		job1.setOutputValueClass(Text.class);
-		FileInputFormat.addInputPath(job1, new Path(otherArgs[otherArgs.length - 1], "out1"));
-		FileOutputFormat.setOutputPath(job1, new Path(otherArgs[otherArgs.length - 1], "out2"));
-		System.exit(job1.waitForCompletion(true) ? 0 : 1);
+		for (int i = 0; i < otherArgs.length - 1; i++) {
+		  	FileInputFormat.addInputPath(job1, new Path(otherArgs[i]));
+		}
+		FileOutputFormat.setOutputPath(job1, new Path(otherArgs[otherArgs.length - 1], "out1"));
+		if (!job1.waitForCompletion(true)) {
+		  	System.exit(1);
+		}
+
+		// Job job1 = Job.getInstance(conf, "MapReduce 1");
+		// job1.setJarByClass(TriangleCount.class);
+		// job1.setMapperClass(Mapper1.class);
+		// job1.setReducerClass(Reducer1.class);
+		// job1.setMapOutputKeyClass(IntWritable.class);
+		// job1.setMapOutputValueClass(IntWritable.class);
+		// job1.setOutputKeyClass(Text.class);
+		// job1.setOutputValueClass(Text.class);
+		// FileInputFormat.addInputPath(job1, new Path(otherArgs[otherArgs.length - 1], "out1"));
+		// FileOutputFormat.setOutputPath(job1, new Path(otherArgs[otherArgs.length - 1], "out2"));
+		// System.exit(job1.waitForCompletion(true) ? 0 : 1);
 	}
 }
