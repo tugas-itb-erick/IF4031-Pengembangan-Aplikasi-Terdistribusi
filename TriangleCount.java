@@ -2,8 +2,6 @@
 	13515011 - Reinhard Benyamin L
 	13515057 - Erick Wijaya
  */
-package reinhard.erick.hadoop;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
@@ -21,7 +19,7 @@ import org.apache.hadoop.util.GenericOptionsParser;
 
 public class TriangleCount {
 
-	public static class PreprocessingMapper extends Mapper<Object, Text, Text, IntWritable> {
+	public static class PreprocessMapper extends Mapper<Object, Text, Text, IntWritable> {
 		
 		private final static IntWritable one = new IntWritable(1);
 
@@ -40,7 +38,7 @@ public class TriangleCount {
 		}
 	}
 
-	public static class PreprocessingReducer extends Reducer<Text, IntWritable, Text, Text> {
+	public static class PreprocessReducer extends Reducer<Text, IntWritable, Text, Text> {
 		
 		private Text valOut = new Text("#");
 
@@ -71,18 +69,19 @@ public class TriangleCount {
 		
 		private Text valOut = new Text();
 
-		public void reduce(IntWritable key, Iterable<IntWritable> values, Context context) throws IOException, InterruptedException {
+		public void reduce(IntWritable key, Iterable<IntWritable> values, Context context) 
+		throws IOException, InterruptedException {
 			ArrayList<Integer> listValues = new ArrayList<Integer>();
 			values.forEach(val -> listValues.add(new Integer(val.get())));
-			listValues.forEach(val1 ->
-				listValues.forEach(val2 -> {
+			for (Integer val1: listValues) {
+				for (Integer val2: listValues) {
 					if (val1 < val2) {
 						keyOut.set(Integer.toString(key.get()));
 						valOut.set(val1.toString() + ";" + val2.toString());
 						context.write(keyOut, valOut);
 					}
-				})
-			);
+				}
+			}
 		}
 	}
 
@@ -95,9 +94,9 @@ public class TriangleCount {
 			System.exit(2);
 		}
 
-		Job jobPreprocess = jobPreprocess.getInstance(conf, "Preprocess");
+		Job jobPreprocess = Job.getInstance(conf, "Preprocess");
 		jobPreprocess.setJarByClass(TriangleCount.class);
-		jobPreprocess.setMapperClass(PreprocessMap.class);
+		jobPreprocess.setMapperClass(PreprocessMapper.class);
 		jobPreprocess.setReducerClass(PreprocessReducer.class);
 		jobPreprocess.setMapOutputKeyClass(Text.class);
 		jobPreprocess.setMapOutputValueClass(IntWritable.class);
