@@ -18,6 +18,7 @@
 package reinhard.erick.hadoop;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.StringTokenizer;
 
 import org.apache.hadoop.conf.Configuration;
@@ -125,7 +126,7 @@ public class TriangleCount {
 
 		Job job1 = Job.getInstance(conf, "MapReduce 1");
 		job1.setJarByClass(TriangleCount.class);
-		job1.setMapperClass(Map1.class);
+		job1.setMapperClass(Mapper1.class);
 		job1.setReducerClass(Reducer1.class);
 		job1.setMapOutputKeyClass(IntWritable.class);
 		job1.setMapOutputValueClass(IntWritable.class);
