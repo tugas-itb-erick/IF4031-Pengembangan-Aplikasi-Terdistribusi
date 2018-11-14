@@ -152,7 +152,7 @@ public class TriangleCount {
 			System.exit(2);
 		}
 
-		Job jobPrep = Job.getInstance(conf, "🐘 Preprocess 🐘");
+		Job jobPrep = Job.getInstance(conf, "☕ Preprocess ☕");
 		jobPrep.setJarByClass(TriangleCount.class);
 		jobPrep.setMapperClass(MapperPrep.class);
 		jobPrep.setReducerClass(ReducerPrep.class);
@@ -166,7 +166,7 @@ public class TriangleCount {
 		FileOutputFormat.setOutputPath(jobPrep, new Path(otherArgs[otherArgs.length - 1], "prep"));
 		System.exit(jobPrep.waitForCompletion(true) ? 0 : 1);
 
-		Job job1 = Job.getInstance(conf, "🐘 MapReduce 1 🐘");
+		Job job1 = Job.getInstance(conf, "☕ MapReduce 1 ☕");
 		job1.setJarByClass(TriangleCount.class);
 		job1.setMapperClass(Mapper1.class);
 		job1.setReducerClass(Reducer1.class);
@@ -178,7 +178,7 @@ public class TriangleCount {
 		FileOutputFormat.setOutputPath(job1, new Path(otherArgs[otherArgs.length - 1], "mapred1"));
 		System.exit(job1.waitForCompletion(true) ? 0 : 1);
 
-		Job job2 = Job.getInstance(conf, "🐘 MapReduce 2 🐘");
+		Job job2 = Job.getInstance(conf, "☕ MapReduce 2 ☕");
 		job2.setJarByClass(TriangleCount.class);
 		job2.setMapperClass(Mapper2.class);
 		job2.setReducerClass(Reducer2.class);
@@ -191,7 +191,7 @@ public class TriangleCount {
 		FileOutputFormat.setOutputPath(job2, new Path(otherArgs[otherArgs.length - 1], "mapred2"));
 		System.exit(job2.waitForCompletion(true) ? 0 : 1);
 
-		Job jobFinal = Job.getInstance(conf, "🐘🐘🐘 Final TriangleCount 🐘🐘🐘");
+		Job jobFinal = Job.getInstance(conf, "☕ Final TriangleCount ☕");
 		jobFinal.setJarByClass(TriangleCount.class);
 		jobFinal.setMapperClass(Mapper2.class);
 		jobFinal.setReducerClass(Reducer2.class);
