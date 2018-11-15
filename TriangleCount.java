@@ -20,11 +20,8 @@ import org.apache.hadoop.util.GenericOptionsParser;
 public class TriangleCount {
 
 	public static final Text EMPTY_VAL = new Text("X");
-
 	public static final Text DOLLAR_VAL = new Text("$");
-
 	public static final Text TRIANGLE = new Text("Triangle");
-	
 	public static final IntWritable ONE = new IntWritable(1);
 
 	public static class MapperPrep extends Mapper<Object, Text, Text, Text> {
@@ -35,6 +32,7 @@ public class TriangleCount {
 			StringTokenizer itr = new StringTokenizer(value.toString());
 			String first = itr.nextToken();
 			String second = itr.nextToken();
+
 			keyOut.set(first + "," + second);
 			context.write(keyOut, EMPTY_VAL);
 			keyOut.set(second + "," + first);
@@ -52,14 +50,17 @@ public class TriangleCount {
 	public static class Mapper1 extends Mapper<Text, Text, IntWritable, IntWritable> {
 		
 		private IntWritable keyOut = new IntWritable();
-
 		private IntWritable valOut = new IntWritable();
 
 		public void map(Text key, Text value, Context context) throws IOException, InterruptedException {
-			StringTokenizer itr = new StringTokenizer(key.toString());
+			StringTokenizer itr = new StringTokenizer(value.toString());
+			String realKey = itr.nextToken();
+
+			itr = new StringTokenizer(realKey, ",");
 			int u = Integer.parseInt(itr.nextToken());
 			int v = Integer.parseInt(itr.nextToken());
-			if (v > u) {
+
+			if(v > u) {
 				keyOut.set(u);
 				valOut.set(v);
 				context.write(keyOut, valOut);
@@ -70,7 +71,6 @@ public class TriangleCount {
 	public static class Reducer1 extends Reducer<IntWritable, IntWritable, Text, Text> {
 		
 		private Text keyOut = new Text();
-		
 		private Text valOut = new Text();
 
 		public void reduce(IntWritable key, Iterable<IntWritable> values, Context context) throws IOException, InterruptedException {
@@ -89,10 +89,15 @@ public class TriangleCount {
 	public static class Mapper2 extends Mapper<Text, Text, Text, Text> {
 		
 		public void map(Text key, Text value, Context context) throws IOException, InterruptedException {
-			if (value.toString().equals(EMPTY_VAL.toString())) {
-				context.write(key, DOLLAR_VAL);
+			StringTokenizer itr = new StringTokenizer(value.toString());
+
+			String realKey = itr.nextToken();
+			String realValue = itr.nextToken();
+
+			if (realValue.equals(EMPTY_VAL.toString())) {
+				context.write(realKey, DOLLAR_VAL);
 			} else {
-				context.write(value, key);
+				context.write(realValue, realKey);
 			}
 		}
 	}
@@ -104,13 +109,15 @@ public class TriangleCount {
 		public void reduce(Text key, Iterable<Text> values, Context context) 
 		throws IOException, InterruptedException {
 			boolean hasDollar = false;
-			for (Text val : values) {
+			
+			for(Text val : values) {
 				if (val.toString().equals(DOLLAR_VAL.toString())) {
 					hasDollar = true;
 					break;
 				}
 			}
-			if (hasDollar) {
+
+			if(hasDollar) {
 				for (Text val : values) {
 					if (!val.toString().equals(DOLLAR_VAL.toString())) {
 						keyOut.set(Integer.parseInt(val.toString()));
@@ -131,13 +138,13 @@ public class TriangleCount {
 	public static class ReducerFinal extends Reducer<Text, IntWritable, Text, IntWritable> {
 
 		private int sum = 0;
-
 		private IntWritable valOut = new IntWritable();
 
 		public void reduce(Text key, Iterable<IntWritable> values, Context context) throws IOException, InterruptedException {
 			values.forEach(val -> {
 				sum += val.get();
 			});
+
 			valOut.set(sum);
 			context.write(TRIANGLE, valOut);
 		}
@@ -147,7 +154,7 @@ public class TriangleCount {
 		Configuration conf = new Configuration();
 		String[] otherArgs = new GenericOptionsParser(conf, args).getRemainingArgs();
 
-		if (otherArgs.length < 2) {
+		if(otherArgs.length < 2) {
 			System.err.println("Usage: TriangleCount <in> [<in>...] <out>");
 			System.exit(2);
 		}
@@ -160,9 +167,11 @@ public class TriangleCount {
 		jobPrep.setMapOutputValueClass(Text.class);
 		jobPrep.setOutputKeyClass(Text.class);
 		jobPrep.setOutputValueClass(Text.class);
-		for (int i = 0; i < otherArgs.length - 1; i++) {
+		
+		for(int i = 0; i < otherArgs.length - 1; i++) {
 		  	FileInputFormat.addInputPath(jobPrep, new Path(otherArgs[i]));
 		}
+		
 		FileOutputFormat.setOutputPath(jobPrep, new Path(otherArgs[otherArgs.length - 1], "prep"));
 		System.exit(jobPrep.waitForCompletion(true) ? 0 : 1);
 
