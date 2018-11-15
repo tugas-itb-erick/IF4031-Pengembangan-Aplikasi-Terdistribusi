@@ -87,6 +87,9 @@ public class TriangleCount {
 	}
 
 	public static class Mapper2 extends Mapper<Text, Text, Text, Text> {
+
+		private Text keyOut = new Text();
+		private Text valueOut = new Text();
 		
 		public void map(Text key, Text value, Context context) throws IOException, InterruptedException {
 			StringTokenizer itr = new StringTokenizer(value.toString());
@@ -95,9 +98,12 @@ public class TriangleCount {
 			String realValue = itr.nextToken();
 
 			if (realValue.equals(EMPTY_VAL.toString())) {
-				context.write(realKey, DOLLAR_VAL);
+				keyOut.set(realKey);
+				context.write(keyOut, DOLLAR_VAL);
 			} else {
-				context.write(realValue, realKey);
+				keyOut.set(realValue);
+				valueOut.set(realKey);
+				context.write(keyOut, valueOut);
 			}
 		}
 	}
