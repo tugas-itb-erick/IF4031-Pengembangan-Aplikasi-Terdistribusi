@@ -32,7 +32,7 @@ public class TriangleCount {
 		private Text keyOut = new Text();
 
 		public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
-			StringTokenizer itr = new StringTokenizer(key.toString());
+			StringTokenizer itr = new StringTokenizer(value.toString());
 			String first = itr.nextToken();
 			String second = itr.nextToken();
 			keyOut.set(first + "," + second);
