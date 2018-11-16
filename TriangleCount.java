@@ -179,7 +179,7 @@ public class TriangleCount {
 		}
 		
 		FileOutputFormat.setOutputPath(jobPrep, new Path(otherArgs[otherArgs.length - 1], "prep"));
-		System.exit(jobPrep.waitForCompletion(true) ? 0 : 1);
+		//System.exit(jobPrep.waitForCompletion(true) ? 0 : 1);
 
 		Job job1 = Job.getInstance(conf, "Master of Java - MapReduce 1");
 		job1.setJarByClass(TriangleCount.class);
@@ -191,7 +191,7 @@ public class TriangleCount {
 		job1.setOutputValueClass(Text.class);
 		FileInputFormat.addInputPath(job1, new Path(otherArgs[otherArgs.length - 1], "prep"));
 		FileOutputFormat.setOutputPath(job1, new Path(otherArgs[otherArgs.length - 1], "mapred1"));
-		System.exit(job1.waitForCompletion(true) ? 0 : 1);
+		//System.exit(job1.waitForCompletion(true) ? 0 : 1);
 
 		Job job2 = Job.getInstance(conf, "Master of Java - MapReduce 2");
 		job2.setJarByClass(TriangleCount.class);
@@ -204,7 +204,7 @@ public class TriangleCount {
 		FileInputFormat.addInputPath(job2, new Path(otherArgs[otherArgs.length - 1], "prep"));
 		FileInputFormat.addInputPath(job2, new Path(otherArgs[otherArgs.length - 1], "mapred1"));
 		FileOutputFormat.setOutputPath(job2, new Path(otherArgs[otherArgs.length - 1], "mapred2"));
-		System.exit(job2.waitForCompletion(true) ? 0 : 1);
+		//System.exit(job2.waitForCompletion(true) ? 0 : 1);
 
 		Job jobFinal = Job.getInstance(conf, "Master of Java - Final TriangleCount");
 		jobFinal.setJarByClass(TriangleCount.class);
