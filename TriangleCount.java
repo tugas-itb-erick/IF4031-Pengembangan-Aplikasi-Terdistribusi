@@ -47,12 +47,12 @@ public class TriangleCount {
 		}
 	}
 
-	public static class Mapper1 extends Mapper<Text, Text, IntWritable, IntWritable> {
+	public static class Mapper1 extends Mapper<Object, Text, IntWritable, IntWritable> {
 		
 		private IntWritable keyOut = new IntWritable();
 		private IntWritable valOut = new IntWritable();
 
-		public void map(Text key, Text value, Context context) throws IOException, InterruptedException {
+		public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
 			StringTokenizer itr = new StringTokenizer(value.toString());
 			String realKey = itr.nextToken();
 
@@ -86,12 +86,12 @@ public class TriangleCount {
 		}
 	}
 
-	public static class Mapper2 extends Mapper<Text, Text, Text, Text> {
+	public static class Mapper2 extends Mapper<Object, Text, Text, Text> {
 
 		private Text keyOut = new Text();
 		private Text valueOut = new Text();
 		
-		public void map(Text key, Text value, Context context) throws IOException, InterruptedException {
+		public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
 			StringTokenizer itr = new StringTokenizer(value.toString());
 
 			String realKey = itr.nextToken();
@@ -134,9 +134,9 @@ public class TriangleCount {
 		}
 	}
 
-	public static class MapperFinal extends Mapper<IntWritable, IntWritable, Text, IntWritable> {
+	public static class MapperFinal extends Mapper<Object, IntWritable, Text, IntWritable> {
 		
-		public void map(IntWritable key, IntWritable value, Context context) throws IOException, InterruptedException {
+		public void map(Object key, IntWritable value, Context context) throws IOException, InterruptedException {
 			context.write(TRIANGLE, ONE);
 		}
 	}
