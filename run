@@ -1,7 +1,7 @@
 #!/bin/bash
 
-scp -R input hduser@167.205.35.25:/home/hduser/Application/hadoop-2.7.1/user/wijayaerick
+scp -R testcase/input hduser@167.205.35.25:/home/hduser/Application/hadoop-2.7.1/user/wijayaerick/testcase
 scp TriangleCount.java execute hduser@167.205.35.25:/home/hduser/Application/hadoop-2.7.1/user/wijayaerick
 
-ssh hduser@167.205.35.25 "cd /home/hduser/Application/hadoop-2.7.1/user/wijayaerick; ./execute $1 $2;"
+ssh hduser@167.205.35.25 "cd /home/hduser/Application/hadoop-2.7.1/user/wijayaerick; ./execute /user/wijayaerick/testcase/input/$1 /user/wijayaerick/testcase/output"
 ./get $1
