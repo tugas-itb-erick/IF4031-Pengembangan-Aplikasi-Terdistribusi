@@ -1,0 +1,4 @@
+#!/bin/bash
+
+filename=$(printf $1 | grep -o -P "[^/]+\.in$")
+curl http://ld5-09.if.itb.ac.id:50075/webhdfs/v1/user/wijayaerick/out1/final/part-r-00000?op=OPEN&namenoderpcaddress=ld5-01:9000&offset=0 -o output/$filename.out

@@ -1,11 +1,7 @@
 #!/bin/bash
 
 scp -R input hduser@167.205.35.25:/home/hduser/Application/hadoop-2.7.1/user/wijayaerick
-scp TriangleCount.java hduser@167.205.35.25:/home/hduser/Application/hadoop-2.7.1/user/wijayaerick
+scp TriangleCount.java execute hduser@167.205.35.25:/home/hduser/Application/hadoop-2.7.1/user/wijayaerick
 
-ssh hduser@167.205.35.25 "cd /home/hduser/Application/hadoop-2.7.1/user/wijayaerick"
-
-#../../bin/hdfs dfs -rmr $2 
-#hadoop com.sun.tools.javac.Main TriangleCount.java
-#jar cf tc.jar TriangleCount*.class
-#hadoop jar tc.jar TriangleCount $1 $2
+ssh hduser@167.205.35.25 "cd /home/hduser/Application/hadoop-2.7.1/user/wijayaerick; ./execute $1 $2;"
+./get $1
