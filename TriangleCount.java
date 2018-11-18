@@ -73,12 +73,19 @@ public class TriangleCount {
 		private Text keyOut = new Text();
 		private Text valOut = new Text();
 
+		private IntWritable value = new IntWritable();
+		private ArrayList<Integer> list = new ArrayList<>(); 
+
 		public void reduce(IntWritable key, Iterable<IntWritable> values, Context context) throws IOException, InterruptedException {
-			for (IntWritable val1 : values) {
-				for (IntWritable val2 : values) {
-					if (val1.get() < val2.get()) {
+			while(values.hasMoreTokens()) {
+				value.set(values.nextToken());
+				list.add(value.get());
+			}
+
+			for(int idx1 = 0; idx1 < list.size() - 1; idx1++) {
+				for(int idx2 = idx1 + 1; idx2 < list.size(); idx2++) {
 						keyOut.set(String.valueOf(key.get()));
-						valOut.set(String.valueOf(val1.get()) + "," + String.valueOf(val2.get()));
+						valOut.set(String.valueOf(list.get(idx1)) + "," + String.valueOf(list.get(idx2)));
 						context.write(keyOut, valOut);
 					}
 				}
