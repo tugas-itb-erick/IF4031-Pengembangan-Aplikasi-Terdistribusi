@@ -1,7 +1,10 @@
 /**
-	13515011 - Reinhard Benyamin L
-	13515057 - Erick Wijaya
+ * Tugas Pengembangan Aplikasi Terdistribusi Hadoop MapReduce
+ * 
+ * 13515011 - Reinhard Benjamin Linardi
+ * 13515057 - Erick Wijaya
  */
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
@@ -15,6 +18,8 @@ import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
+import org.apache.hadoop.mapreduce.lib.input.MultipleInputs;
+import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
 import org.apache.hadoop.util.GenericOptionsParser;
 
 public class TriangleCount {
@@ -138,9 +143,9 @@ public class TriangleCount {
 		}
 	}
 
-	public static class MapperFinal extends Mapper<Object, IntWritable, Text, IntWritable> {
+	public static class MapperFinal extends Mapper<Object, Text, Text, IntWritable> {
 		
-		public void map(Object key, IntWritable value, Context context) throws IOException, InterruptedException {
+		public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
 			context.write(TRIANGLE, ONE);
 		}
 	}
@@ -215,8 +220,8 @@ public class TriangleCount {
 
 		Job jobFinal = Job.getInstance(conf, "Master of Java - Final TriangleCount");
 		jobFinal.setJarByClass(TriangleCount.class);
-		jobFinal.setMapperClass(Mapper2.class);
-		jobFinal.setReducerClass(Reducer2.class);
+		jobFinal.setMapperClass(MapperFinal.class);
+		jobFinal.setReducerClass(ReducerFinal.class);
 		jobFinal.setMapOutputKeyClass(Text.class);
 		jobFinal.setMapOutputValueClass(IntWritable.class);
 		jobFinal.setOutputKeyClass(Text.class);
