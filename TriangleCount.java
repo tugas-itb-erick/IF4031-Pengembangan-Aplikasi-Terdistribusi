@@ -84,10 +84,9 @@ public class TriangleCount {
 
 			for(int idx1 = 0; idx1 < list.size() - 1; idx1++) {
 				for(int idx2 = idx1 + 1; idx2 < list.size(); idx2++) {
-						keyOut.set(String.valueOf(key.get()));
-						valOut.set(String.valueOf(list.get(idx1)) + "," + String.valueOf(list.get(idx2)));
-						context.write(keyOut, valOut);
-					}
+					keyOut.set(String.valueOf(key.get()));
+					valOut.set(String.valueOf(list.get(idx1)) + "," + String.valueOf(list.get(idx2)));
+					context.write(keyOut, valOut);
 				}
 			}
 		}
