@@ -1,4 +1,6 @@
 #!/bin/bash
 
-filename=$(printf $1 | grep -o -P "[^/]+\.in$" | sed "s/\.in$/.out/g")
-curl http://ld5-09.if.itb.ac.id:50075/webhdfs/v1/user/wijayaerick/testcase/output/final/part-r-00000?op=OPEN&namenoderpcaddress=ld5-01:9000&offset=0 -o testcase/output/$filename
+folder=$(printf $1 | grep -o -P "[^/]+\\.in$" | sed "s/\\.in$//")
+filename="$folder.out"
+
+curl http://ld5-09.if.itb.ac.id:50075/webhdfs/v1/user/wijayaerick/testcase/output/$folder/final/part-r-00000?op=OPEN&namenoderpcaddress=ld5-01:9000&offset=0 -o testcase/output/$filename

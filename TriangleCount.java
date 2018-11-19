@@ -79,6 +79,8 @@ public class TriangleCount {
 		private ArrayList<Integer> list = new ArrayList<>(); 
 
 		public void reduce(IntWritable key, Iterable<IntWritable> values, Context context) throws IOException, InterruptedException {
+			list.clear();
+		
 			for(IntWritable value : values) {
 				list.add(value.get());
 			}
